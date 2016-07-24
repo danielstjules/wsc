@@ -1,6 +1,6 @@
 {
   "name": "wsc",
-  "version": "0.0.3",
+  "version": "0.1.0",
   "description": "WebSocket client for the terminal",
   "main": "index.js",
   "bin": "wsc",
