@@ -45,7 +45,7 @@ const ws = new WebSocket(url);
 ws.on('open', () => {
   var sent = Date.now();
 
-  console.log(`Connected to ${url}`);
+  console.log(chalk.green(`Connected to ${url}`));
   rl.prompt();
 
   ws.on('error', (err) => {
