@@ -1,20 +1,26 @@
 #!/usr/bin/env node
-const WebSocketClient = require('websocket').client;
-const parser          = require('meow');
-const chalk           = require('chalk');
-const readline        = require('readline');
+const WebSocket = require('ws');
+const parser    = require('meow');
+const chalk     = require('chalk');
+const readline  = require('readline');
 
 const cli = parser(`
   Usage
     $ wsc [options] ws://echo.websocket.org
 
   Options
-    -e, --eval  Evaluate input as JS and encode as JSON
-    -C          Disable color output
+    -e, --eval       Evaluate input as JS and encode as JSON
+    -m, --mask       Enable masking
+    -r, --roundtrip  Track roundtrip time between sent/recv
+    -t, --time       Print a timestamp in ms before each line
+    -C               Disable color output
 `, {
-  boolean: ['eval', 'c'],
+  boolean: ['e', 'm', 'r', 't', 'c'],
   alias: {
-    e: 'eval'
+    e: 'eval',
+    m: 'mask',
+    r: 'roundtrip',
+    t: 'time'
   }
 });
 
@@ -29,39 +35,57 @@ const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout
 }).on('SIGINT', () => {
+  console.log();
   process.exit();
 });
 
 const url = cli.input[0];
-const client = new WebSocketClient();
-client.connect(url);
+const ws = new WebSocket(url);
 
-client.on('connect', (conn) => {
+ws.on('open', () => {
+  var sent = Date.now();
+
   console.log(`Connected to ${url}`);
   rl.prompt();
 
-  conn.on('error', (err) => {
-    console.error('Connection Error: ' + err.toString());
+  ws.on('error', (err) => {
+    console.error(`Connection error: ${err}`);
     process.exit(1);
   }).on('close', () => {
     console.log('Connection closed');
     process.exit(0);
-  }).on('message', (message) => {
-    var output;
-    if (message.type === 'utf8') {
-      output = `< ${message.utf8Data}`;
-    } else {
-      output = '< Binary data received';
+  }).on('message', (message, flags) => {
+    var output = '';
+    var recv = Date.now();
+    if (cli.flags.time) {
+      output += `${recv} `;
     }
-    readline.clearLine(process.stdout, 0);
-    readline.cursorTo(process.stdout, 0);
-    console.log(chalk.gray(output));
 
+    if (flags.binary) {
+      output += '< Binary data received';
+    } else {
+      output += `< ${message}`;
+    }
+
+    if (cli.flags.roundtrip) {
+      output += ` (${recv - sent}ms)`;
+    }
+
+    clear();
+    console.log(chalk.gray(output));
     rl.prompt();
   });
 
   rl.on('line', (input) => {
     var message = input;
+
+    sent = Date.now();
+    if (cli.flags.time) {
+      clearPrev();
+      console.log(`${sent} > ${input}`);
+      rl.prompt();
+    }
+
     if (cli.flags.eval) {
       try {
         message = JSON.stringify(eval(`(${input})`));
@@ -69,6 +93,16 @@ client.on('connect', (conn) => {
         // no-op
       }
     }
-    conn.sendUTF(message);
+    ws.send(message, {mask: cli.flags.mask});
   });
 });
+
+function clear() {
+  readline.clearLine(process.stdout, 0);
+  readline.cursorTo(process.stdout, 0);
+}
+
+function clearPrev() {
+  readline.moveCursor(process.stdout, 0, -1);
+  clear();
+}
