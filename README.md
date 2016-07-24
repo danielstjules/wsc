@@ -1,6 +1,6 @@
 # wsc
 
-![wsc](https://cloud.githubusercontent.com/assets/817212/17082470/69e9c1b4-5134-11e6-8f93-72728aaf1c44.png)
+![wsc](https://cloud.githubusercontent.com/assets/817212/17082502/5a441f6a-5135-11e6-80e8-a770a8cebae1.png)
 
 ```
 WebSocket client for the terminal
