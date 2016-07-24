@@ -1,5 +1,7 @@
 # wsc
 
+![wsc](https://cloud.githubusercontent.com/assets/817212/17082460/125974a8-5134-11e6-9020-6808a1edd079.png)
+
 ```
 WebSocket client for the terminal
 
