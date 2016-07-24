@@ -1,7 +1,7 @@
 # wsc
 
 ```
-Websocket client from the terminal
+WebSocket client from the terminal
 
 Usage
   $ wsc [options] ws://echo.websocket.org
