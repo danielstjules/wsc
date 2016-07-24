@@ -1,0 +1,36 @@
+{
+  "name": "wsc",
+  "version": "0.0.1",
+  "description": "Websocket client from the terminal",
+  "main": "index.js",
+  "bin": "wsc",
+  "engines": {
+    "node": ">=4"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/danielstjules/wsc.git"
+  },
+  "keywords": [
+    "websocket",
+    "terminal",
+    "client",
+    "web",
+    "socket",
+    "ws"
+  ],
+  "author": "Daniel St. Jules <danielst.jules@gmail.com> (http://danielstjules.com/)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/danielstjules/wsc/issues"
+  },
+  "homepage": "https://github.com/danielstjules/wsc#readme",
+  "dependencies": {
+    "chalk": "^1.1.3",
+    "meow": "^3.7.0",
+    "websocket": "^1.0.23"
+  }
+}

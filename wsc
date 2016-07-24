@@ -1,0 +1,74 @@
+#!/usr/bin/env node
+const WebSocketClient = require('websocket').client;
+const parser          = require('meow');
+const chalk           = require('chalk');
+const readline        = require('readline');
+
+const cli = parser(`
+  Usage
+    $ wsc [options] ws://echo.websocket.org
+
+  Options
+    -e, --eval  Evaluate input as JS and encode as JSON
+    -C          Disable color output
+`, {
+  boolean: ['eval', 'c'],
+  alias: {
+    e: 'eval'
+  }
+});
+
+if (!cli.input.length) {
+  console.error('Missing url');
+  process.exit(1);
+}
+
+chalk.enabled = !cli.flags.C;
+
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout
+}).on('SIGINT', () => {
+  process.exit();
+});
+
+const url = cli.input[0];
+const client = new WebSocketClient();
+client.connect(url);
+
+client.on('connect', (conn) => {
+  console.log(`Connected to ${url}`);
+  rl.prompt();
+
+  conn.on('error', (err) => {
+    console.error('Connection Error: ' + err.toString());
+    process.exit(1);
+  }).on('close', () => {
+    console.log('Connection closed');
+    process.exit(0);
+  }).on('message', (message) => {
+    var output;
+    if (message.type === 'utf8') {
+      output = `< ${message.utf8Data}`;
+    } else {
+      output = '< Binary data received';
+    }
+    readline.clearLine(process.stdout, 0);
+    readline.cursorTo(process.stdout, 0);
+    console.log(chalk.gray(output));
+
+    rl.prompt();
+  });
+
+  rl.on('line', (input) => {
+    var message = input;
+    if (cli.flags.eval) {
+      try {
+        message = JSON.stringify(eval(`(${input})`));
+      } catch (e) {
+        // no-op
+      }
+    }
+    conn.sendUTF(message);
+  });
+});
