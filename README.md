@@ -10,9 +10,9 @@ Usage
 
 Options
   -e, --eval       Evaluate input as JS and encode as JSON
-  -m, --mask       Enable masking
   -r, --roundtrip  Track roundtrip time between sent/recv
   -t, --time       Print a timestamp in ms before each line
+  -M               Disable masking
   -C               Disable color output
 ```
 
