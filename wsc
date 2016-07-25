@@ -14,12 +14,15 @@ const cli = parser(`
     -t, --time       Print a timestamp in ms before each line
     -M               Disable masking
     -C               Disable color output
+    -p, --protocol   Set used protocol
 `, {
   boolean: ['e', 'r', 't', 'M', 'C'],
+  string: ['p'],
   alias: {
     e: 'eval',
     r: 'roundtrip',
-    t: 'time'
+    t: 'time',
+    p: 'protocol'
   }
 });
 
@@ -39,7 +42,7 @@ const rl = readline.createInterface({
 });
 
 const url = cli.input[0];
-const ws = new WebSocket(url);
+const ws = new WebSocket(url, cli.flags.protocol);
 
 ws.on('open', () => {
   var sent = Date.now();
