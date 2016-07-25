@@ -10,15 +10,14 @@ const cli = parser(`
 
   Options
     -e, --eval       Evaluate input as JS and encode as JSON
-    -m, --mask       Enable masking
     -r, --roundtrip  Track roundtrip time between sent/recv
     -t, --time       Print a timestamp in ms before each line
+    -M               Disable masking
     -C               Disable color output
 `, {
-  boolean: ['e', 'm', 'r', 't', 'c'],
+  boolean: ['e', 'r', 't', 'M', 'C'],
   alias: {
     e: 'eval',
-    m: 'mask',
     r: 'roundtrip',
     t: 'time'
   }
@@ -86,7 +85,7 @@ ws.on('open', () => {
       rl.prompt();
     }
 
-    ws.send(message, {mask: cli.flags.mask});
+    ws.send(message, {mask: !cli.flags.M});
     rl.prompt();
   });
 });
