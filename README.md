@@ -9,11 +9,12 @@ Usage
   $ wsc [options] ws://echo.websocket.org
 
 Options
-  -e, --eval       Evaluate input as JS and encode as JSON
-  -r, --roundtrip  Track roundtrip time between sent/recv
-  -t, --time       Print a timestamp in ms before each line
-  -M               Disable masking
-  -C               Disable color output
+  -e, --eval            Evaluate input as JS and encode as JSON
+  -r, --roundtrip       Track roundtrip time between sent/recv
+  -t, --time            Print a timestamp in ms before each line
+  -p, --protocol <str>  Set protocol
+  -M                    Disable masking
+  -C                    Disable color output
 ```
 
 #### Installation
