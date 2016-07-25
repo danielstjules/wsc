@@ -87,6 +87,7 @@ ws.on('open', () => {
     }
 
     ws.send(message, {mask: cli.flags.mask});
+    rl.prompt();
   });
 });
 
