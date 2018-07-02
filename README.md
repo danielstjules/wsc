@@ -13,6 +13,7 @@ Options
   -r, --roundtrip       Track roundtrip time between sent/recv
   -t, --time            Print a timestamp in ms before each line
   -p, --protocol <str>  Set protocol
+  -d, --decode <str>    Decode binary responses using encoding specified by str
   -M                    Disable masking
   -C                    Disable color output
 ```
