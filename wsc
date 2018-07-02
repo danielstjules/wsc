@@ -13,21 +13,31 @@ const cli = parser(`
     -r, --roundtrip       Track roundtrip time between sent/recv
     -t, --time            Print a timestamp in ms before each line
     -p, --protocol <str>  Set protocol
+    -d, --decode <str>    Decode binary responses using encoding specified by str
     -M                    Disable masking
     -C                    Disable color output
 `, {
   boolean: ['e', 'r', 't', 'M', 'C'],
-  string: ['p'],
+  string: ['p', 'd'],
   alias: {
     e: 'eval',
     r: 'roundtrip',
     t: 'time',
-    p: 'protocol'
+    p: 'protocol',
+    d: 'decode'
   }
 });
 
+const supported_encodings =
+      ['ascii', 'utf8', 'utf16le', 'ucs2', 'base64', 'latin1', 'hex'];
+
 if (!cli.input.length) {
   console.error('Missing url');
+  process.exit(1);
+}
+
+if (cli.flags.decode && !supported_encodings.includes(cli.flags.decode)) {
+  console.error(`Decode encoding must be one of: ${supported_encodings}`);
   process.exit(1);
 }
 
@@ -64,7 +74,12 @@ ws.on('open', () => {
     }
 
     if (flags.binary) {
-      output += '< Binary data received';
+      if (cli.flags.decode) {
+        decoded = Buffer.from(message, cli.flags.decode);
+        output += `< ${decoded}`;
+      } else {
+        output += '< Binary data received';
+      }
     } else {
       output += `< ${message}`;
     }
