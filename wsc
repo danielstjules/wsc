@@ -16,13 +16,35 @@ const cli = parser(`
     -M                    Disable masking
     -C                    Disable color output
 `, {
-  boolean: ['e', 'r', 't', 'M', 'C'],
-  string: ['p'],
-  alias: {
-    e: 'eval',
-    r: 'roundtrip',
-    t: 'time',
-    p: 'protocol'
+  flags: {
+    eval: {
+      type: 'boolean',
+      alias: 'e',
+      default: false
+    },
+    roundtrip: {
+      type: 'boolean',
+      alias: 'r',
+      default: false
+    },
+    time: {
+      type: 'boolean',
+      alias: 't',
+      default: false
+    },
+    protocol: {
+      type: 'string',
+      alias: 'p',
+      default: null
+    },
+    M: { // disable masking
+      type: 'boolean',
+      default: false
+    },
+    C: { // disable color output
+      type: 'boolean',
+      default: false
+    }
   }
 });
 
