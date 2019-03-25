@@ -32,5 +32,9 @@
     "chalk": "^2.4.2",
     "meow": "^4.0.1",
     "ws": "^5.2.2"
+  },
+  "optionalDependencies": {
+    "bufferutil": "^4.0.1",
+    "utf-8-validate": "^5.0.2"
   }
 }
